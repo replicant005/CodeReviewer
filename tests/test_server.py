@@ -99,3 +99,15 @@ def test_prompt_formatting():
         assert payload["model"] == "qwen2.5-coder"
         assert payload["prompt"] == "print('hello')"
         assert payload["stream"] is False
+
+
+# test that no prompt is sent if tge request is empty , we'll assert that an empty s
+def test_no_prompt_sent_when_empty():
+    with patch("requests.post") as mock_post:
+        llm_client.call_llm("")   
+
+    args, kwargs = mock_post.call_args
+    payload = kwargs["json"]
+
+    # prompt is sent but empty
+    assert payload["prompt"] == ""
